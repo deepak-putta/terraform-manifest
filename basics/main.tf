@@ -1,6 +1,5 @@
 provider "aws" {
   region = "us-east-1"
-  
 }
 
 variable "sn-cidr-block" {
@@ -19,6 +18,9 @@ variable "vpc-cidr-block" {
   type = string
 }
 
+variable "az" {
+  
+}
 variable "env" {
   description = "env to deploy"
   default = "devlopement"
@@ -33,7 +35,7 @@ resource "aws_vpc" "vpc-created" {
 resource "aws_subnet" "subnet-1" {
     vpc_id = aws_vpc.vpc-created.id
     cidr_block = var.cidr_blocks[1]
-    availability_zone = "us-east-1a"
+    availability_zone = var.az
     tags = {
         Name = "subnet-1"
         Subnet = "01"
