@@ -1,39 +1,52 @@
 provider "aws" {
   region = "us-east-1"
-  access_key = "AKIAWZCVHHHQD22IBXFQ"
-  secret_key = "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"
+  
 }
 
-resource "aws_vpc" "vpc_my" {
-    cidr_block = "10.0.0.0/16"
+variable "sn-cidr-block" {
+   
+    description = "subnet cidr block"
+    default = "10.0.2.0/24"
+    type = string
+}
+
+variable "cidr_blocks" {
+  type = list(string)
+}
+variable "vpc-cidr-block" {
+  description = "vpc cidr block"
+  default = "10.0.0.0/16"
+  type = string
+}
+
+variable "env" {
+  description = "env to deploy"
+  default = "devlopement"
+}
+resource "aws_vpc" "vpc-created" {
+    cidr_block = var.cidr_blocks[0]
     tags = {
-        Name = "vpc_my"
+        Name = var.env
     }
 }
 
 resource "aws_subnet" "subnet-1" {
-    vpc_id = aws_vpc.vpc_my.id
-    cidr_block = "10.0.1.0/24"
+    vpc_id = aws_vpc.vpc-created.id
+    cidr_block = var.cidr_blocks[1]
     availability_zone = "us-east-1a"
     tags = {
         Name = "subnet-1"
         Subnet = "01"
     }
 }
-data "aws_vpc" "vpc_defaults" {
-    default = true
+
+output "display-aws-vpc-created" {
+  value = aws_vpc.vpc-created.id
 }
 
-resource "aws_subnet" "subnet-2" {
-    vpc_id = data.aws_vpc.vpc_defaults.id
-    cidr_block = "172.31.32.0/20"
-    availability_zone = "us-east-1a"
-    tags = {
-        Name = "exi-defa-s-2"
-    }
+output "display-aws-sn-1" {
+  value = aws_subnet.subnet-1.id
 }
 
-output "display-aws-vpc_my" {
-  value = aws_vpc.vpc_my.id
-}
+
 
