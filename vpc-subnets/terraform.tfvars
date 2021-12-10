@@ -1,0 +1,5 @@
+vpc_cidr_block = "10.0.0.0/16"
+sn_cidr_block = "10.0.1.0/24"
+env = "dev"
+az = "us-east-1c"
+private_key_location = "EC2.pem"
